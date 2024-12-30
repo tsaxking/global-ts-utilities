@@ -16,6 +16,7 @@ export class Streamer<T = unknown> {
     private emit = this.emitter.emit.bind(this.emitter);
 
     public add(data: T) {
+        this.index ++;
         this.emit('data', data);
     }
 
@@ -29,12 +30,14 @@ export class Streamer<T = unknown> {
         this.emitter.destroyEvents();
     }
 
-    public pipe(stream: Streamer<T> | ((data: T) => void)) {
+    private index = 0;
+
+    public pipe(stream: Streamer<T> | ((data: T, index: number) => void)) {
         this.on('data', (data) => {
             if (stream instanceof Streamer) {
                 stream.add(data);
             } else {
-                stream(data);
+                stream(data, this.index);
             }
         });
         this.on('end', () => {
