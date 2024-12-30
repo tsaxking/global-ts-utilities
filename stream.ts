@@ -20,7 +20,7 @@ export class Streamer<T = unknown> {
     }
 
     public end() {
-        this.emit('end');
+        this.emit('end', undefined);
         this.emitter.destroyEvents();
     }
 
