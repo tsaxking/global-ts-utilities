@@ -1,23 +1,21 @@
-import * as check from './check';
-import * as clock from './clock';
-import * as eventemitter from './event-emitter';
-import * as match from './match';
-import * as math from './math';
-import * as sleep from './sleep';
-import * as statestack from './statestack';
-import * as status from './status';
-import * as stream from './stream';
-import * as text from './text';
+import * as _check from './check';
+import * as _clock from './clock';
+import * as _eventemitter from './event-emitter';
+import * as _match from './match';
+import * as _math from './math';
+import * as _sleep from './sleep';
+import * as _statestack from './statestack';
+import * as _status from './status';
+import * as _stream from './stream';
+import * as _text from './text';
 
-export default {
-    ...check,
-    ...clock,
-    ...eventemitter,
-    ...match,
-    ...math,
-    ...sleep,
-    ...statestack,
-    ...status,
-    ...stream,
-    ...text
-}
+export const check = _check;
+export const clock = _clock;
+export const eventemitter = _eventemitter;
+export const match = _match;
+export const math = _math;
+export const sleep = _sleep;
+export const statestack = _statestack;
+export const status = _status;
+export const stream = _stream;
+export const text = _text;
