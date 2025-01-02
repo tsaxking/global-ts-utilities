@@ -6,11 +6,11 @@ type Case<T, R> = {
 };
 
 class MatchStatement<T, R> {
-    private readonly cases: Case<T, R>[] = [];
+    public readonly cases: Case<T, R>[] = [];
 
-    private defaultCase: ((v: T) => R) | null = null;
+    public defaultCase: ((v: T) => R) | null = null;
 
-    constructor(private readonly value: T) {}
+    constructor(public readonly value: T) {}
 
     public case<K extends T>(match: K, fn: (value: T) => R) {
         this.cases.push({ match, fn });
@@ -49,11 +49,11 @@ type InstanceCase<I extends Instance, T, R> = {
 };
 
 class MatchInstanceStatement<T, R> {
-    private readonly cases: InstanceCase<Instance, T, R>[] = [];
+    public readonly cases: InstanceCase<Instance, T, R>[] = [];
 
-    private defaultCase: ((v: T) => R) | null = null;
+    public defaultCase: ((v: T) => R) | null = null;
 
-    constructor(private readonly value: T) {}
+    constructor(public readonly value: T) {}
 
     public case(match: Instance, fn: (value: T) => R) {
         this.cases.push({ match, fn });
