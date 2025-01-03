@@ -1,10 +1,10 @@
 {
   "name": "ts-utils",
   "version": "1.0.0",
-  "description": "",
-  "main": "lib/cjs/index.js",
-  "module": "lib/esm/index.js",
-  "types": "lib/types/index.d.ts",
+  "description": "A utility library",
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc && tsc -p tsconfig.commonjs.json",
     "install": "npm run build"
@@ -20,51 +20,51 @@
   },
   "exports": {
     ".": {
-      "import": "./lib/esm/index.js",
+      "import": "./lib/index.js",
       "require": "./lib/cjs/index.js"
     },
     "./check": {
-      "import": "./lib/esm/check.js",
+      "import": "./lib/check.js",
       "require": "./lib/cjs/check.js"
     },
     "./clock": {
-      "import": "./lib/esm/clock.js",
+      "import": "./lib/clock.js",
       "require": "./lib/cjs/clock.js"
     },
     "./event-emitter": {
-      "import": "./lib/esm/event-emitter.js",
+      "import": "./lib/event-emitter.js",
       "require": "./lib/cjs/event-emitter.js"
     },
     "./loop": {
-      "import": "./lib/esm/loop.js",
+      "import": "./lib/loop.js",
       "require": "./lib/cjs/loop.js"
     },
     "./match": {
-      "import": "./lib/esm/match.js",
+      "import": "./lib/match.js",
       "require": "./lib/cjs/match.js"
     },
     "./math": {
-      "import": "./lib/esm/math.js",
+      "import": "./lib/math.js",
       "require": "./lib/cjs/math.js"
     },
     "./sleep": {
-      "import": "./lib/esm/sleep.js",
+      "import": "./lib/sleep.js",
       "require": "./lib/cjs/sleep.js"
     },
     "./statestack": {
-      "import": "./lib/esm/statestack.js",
+      "import": "./lib/statestack.js",
       "require": "./lib/cjs/statestack.js"
     },
     "./status": {
-      "import": "./lib/esm/status.js",
+      "import": "./lib/status.js",
       "require": "./lib/cjs/status.js"
     },
     "./stream": {
-      "import": "./lib/esm/stream.js",
+      "import": "./lib/stream.js",
       "require": "./lib/cjs/stream.js"
     },
     "./text": {
-      "import": "./lib/esm/text.js",
+      "import": "./lib/text.js",
       "require": "./lib/cjs/text.js"
     }
   }
