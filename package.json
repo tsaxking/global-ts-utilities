@@ -2,8 +2,8 @@
   "name": "ts-utils",
   "version": "1.0.0",
   "description": "",
-  "main": "lib/index.js",
-  "module": "lib/index.js",
+  "main": "lib/cjs/index.js",
+  "module": "lib/esm/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc && tsc -p tsconfig.commonjs.json",
@@ -13,7 +13,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mdx": "^0.3.1",
     "typescript": "^5.0.0"
   },
   "devDependencies": {
@@ -21,52 +20,52 @@
   },
   "exports": {
     ".": {
-      "import": "./lib/index.js",
-      "require": "./lib/index.js"
+      "import": "./lib/esm/index.js",
+      "require": "./lib/cjs/index.js"
     },
     "./check": {
-      "import": "./lib/check.js",
-      "require": "./lib/check.js"
+      "import": "./lib/esm/check.js",
+      "require": "./lib/cjs/check.js"
     },
     "./clock": {
-      "import": "./lib/clock.js",
-      "require": "./lib/clock.js"
+      "import": "./lib/esm/clock.js",
+      "require": "./lib/cjs/clock.js"
     },
     "./event-emitter": {
-      "import": "./lib/event-emitter.js",
-      "require": "./lib/event-emitter.js"
+      "import": "./lib/esm/event-emitter.js",
+      "require": "./lib/cjs/event-emitter.js"
     },
     "./loop": {
-      "import": "./lib/loop.js",
-      "require": "./lib/loop.js"
+      "import": "./lib/esm/loop.js",
+      "require": "./lib/cjs/loop.js"
     },
     "./match": {
-      "import": "./lib/match.js",
-      "require": "./lib/match.js"
+      "import": "./lib/esm/match.js",
+      "require": "./lib/cjs/match.js"
     },
     "./math": {
-      "import": "./lib/math.js",
-      "require": "./lib/math.js"
+      "import": "./lib/esm/math.js",
+      "require": "./lib/cjs/math.js"
     },
     "./sleep": {
-      "import": "./lib/sleep.js",
-      "require": "./lib/sleep.js"
+      "import": "./lib/esm/sleep.js",
+      "require": "./lib/cjs/sleep.js"
     },
     "./statestack": {
-      "import": "./lib/statestack.js",
-      "require": "./lib/statestack.js"
+      "import": "./lib/esm/statestack.js",
+      "require": "./lib/cjs/statestack.js"
     },
     "./status": {
-      "import": "./lib/status.js",
-      "require": "./lib/status.js"
+      "import": "./lib/esm/status.js",
+      "require": "./lib/cjs/status.js"
     },
     "./stream": {
-      "import": "./lib/stream.js",
-      "require": "./lib/stream.js"
+      "import": "./lib/esm/stream.js",
+      "require": "./lib/cjs/stream.js"
     },
     "./text": {
-      "import": "./lib/text.js",
-      "require": "./lib/text.js"
+      "import": "./lib/esm/text.js",
+      "require": "./lib/cjs/text.js"
     }
   }
 }
