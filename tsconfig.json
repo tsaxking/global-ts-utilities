@@ -6,7 +6,7 @@
     "declarationDir": "./lib",        // Where the declaration files go
     "esModuleInterop": true,                 // Allow default imports for non-ESM modules
     "module": "ESNext",                      // For ESM build (initial default)
-    "outDir": "./lib",                  // Output directory for ESM build
+    "outDir": "./lib/esm",                  // Output directory for ESM build
     "strict": true                           // Optional: Enforces stricter type checking
   },
   "include": ["src/**/*"],                   // Include all files in the src directory

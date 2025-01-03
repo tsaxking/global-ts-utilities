@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A utility library",
   "main": "lib/cjs/index.js",
-  "module": "lib/index.js",
+  "module": "lib/esm/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc && tsc -p tsconfig.commonjs.json",
@@ -20,51 +20,51 @@
   },
   "exports": {
     ".": {
-      "import": "./lib/index.js",
+      "import": "./lib/esm/index.js",
       "require": "./lib/cjs/index.js"
     },
     "./check": {
-      "import": "./lib/check.js",
+      "import": "./lib/esm/check.js",
       "require": "./lib/cjs/check.js"
     },
     "./clock": {
-      "import": "./lib/clock.js",
+      "import": "./lib/esm/clock.js",
       "require": "./lib/cjs/clock.js"
     },
     "./event-emitter": {
-      "import": "./lib/event-emitter.js",
+      "import": "./lib/esm/event-emitter.js",
       "require": "./lib/cjs/event-emitter.js"
     },
     "./loop": {
-      "import": "./lib/loop.js",
+      "import": "./lib/esm/loop.js",
       "require": "./lib/cjs/loop.js"
     },
     "./match": {
-      "import": "./lib/match.js",
+      "import": "./lib/esm/match.js",
       "require": "./lib/cjs/match.js"
     },
     "./math": {
-      "import": "./lib/math.js",
+      "import": "./lib/esm/math.js",
       "require": "./lib/cjs/math.js"
     },
     "./sleep": {
-      "import": "./lib/sleep.js",
+      "import": "./lib/esm/sleep.js",
       "require": "./lib/cjs/sleep.js"
     },
     "./statestack": {
-      "import": "./lib/statestack.js",
+      "import": "./lib/esm/statestack.js",
       "require": "./lib/cjs/statestack.js"
     },
     "./status": {
-      "import": "./lib/status.js",
+      "import": "./lib/esm/status.js",
       "require": "./lib/cjs/status.js"
     },
     "./stream": {
-      "import": "./lib/stream.js",
+      "import": "./lib/esm/stream.js",
       "require": "./lib/cjs/stream.js"
     },
     "./text": {
-      "import": "./lib/text.js",
+      "import": "./lib/esm/text.js",
       "require": "./lib/cjs/text.js"
     }
   }
