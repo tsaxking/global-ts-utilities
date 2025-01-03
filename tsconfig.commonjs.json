@@ -1,0 +1,7 @@
+{
+    "extends": "./tsconfig.json",               // Inherit the base tsconfig
+    "compilerOptions": {
+      "module": "CommonJS",                     // Override to CommonJS
+      "outDir": "./lib/cjs"                    // Output directory for CommonJS build
+    }
+}

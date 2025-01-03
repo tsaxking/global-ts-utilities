@@ -1,14 +1,14 @@
 {
   "compilerOptions": {
-    "outDir": "./lib",
-    "module": "CommonJS",
-    "target": "es2022",
-    "declaration": true,
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true, // Avoid type-checking external library typings
-    "moduleResolution": "node"
+    "target": "ESNext",                     // Use modern JavaScript features
+    "moduleResolution": "node",              // Resolve modules like Node.js does
+    "declaration": true,                     // Generate type declaration files
+    "declarationDir": "./lib/types",        // Where the declaration files go
+    "esModuleInterop": true,                 // Allow default imports for non-ESM modules
+    "module": "ESNext",                      // For ESM build (initial default)
+    "outDir": "./lib/esm",                  // Output directory for ESM build
+    "strict": true                           // Optional: Enforces stricter type checking
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "lib"]
+  "include": ["src/**/*"],                   // Include all files in the src directory
+  "exclude": ["node_modules", "lib"]        // Exclude node_modules and dist from the build
 }

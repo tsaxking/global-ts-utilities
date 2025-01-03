@@ -6,7 +6,7 @@
   "module": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && tsc -p tsconfig.commonjs.json",
     "install": "npm run build"
   },
   "keywords": [],
@@ -16,17 +16,16 @@
     "typescript": "^5.0.0"
   },
   "devDependencies": {
-    "@types/mdx": "^2.0.13",
     "@types/node": "^20.0.0"
   },
   "exports": {
     ".": {
-      "import": "./lib/index.js",    // ESM entry
-      "require": "./lib/index.js"     // CommonJS entry
+      "import": "./lib/index.js",
+      "require": "./lib/index.js"
     },
     "./check": {
-      "import": "./lib/check.js",    // ESM version of check
-      "require": "./lib/check.js"     // CommonJS version of check
+      "import": "./lib/check.js",
+      "require": "./lib/check.js"
     },
     "./clock": {
       "import": "./lib/clock.js",
