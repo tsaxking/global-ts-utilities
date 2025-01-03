@@ -3,7 +3,7 @@
     "target": "ESNext",                     // Use modern JavaScript features
     "moduleResolution": "node",              // Resolve modules like Node.js does
     "declaration": true,                     // Generate type declaration files
-    "declarationDir": "./lib",        // Where the declaration files go
+    "declarationDir": "./lib/esm",        // Where the declaration files go
     "esModuleInterop": true,                 // Allow default imports for non-ESM modules
     "module": "ESNext",                      // For ESM build (initial default)
     "outDir": "./lib/esm",                  // Output directory for ESM build
