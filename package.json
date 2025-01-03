@@ -2,7 +2,7 @@
   "name": "ts-utils",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/",
   "scripts": {
     "build": "tsc",
     "install": "npm run build"
@@ -16,9 +16,5 @@
   "devDependencies": {
     "@types/mdx": "^2.0.13",
     "@types/node": "^20.0.0"
-  },
-  "exports": {
-    "import": "./dist/index.js",
-    "require": "./dist/cjs/index.js"
   }
 }
