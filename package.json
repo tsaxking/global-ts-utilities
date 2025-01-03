@@ -1,5 +1,5 @@
 {
-  "name": "global-ts-utilities",
+  "name": "ts-utils",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -16,5 +16,9 @@
   "devDependencies": {
     "@types/mdx": "^2.0.13",
     "@types/node": "^20.0.0"
+  },
+  "exports": {
+    "import": "./dist/index.js",
+    "require": "./dist/cjs/index.js"
   }
 }
