@@ -16,5 +16,55 @@
   "devDependencies": {
     "@types/mdx": "^2.0.13",
     "@types/node": "^20.0.0"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./check": {
+      "import": "./dist/check.js",
+      "require": "./dist/check.js"
+    },
+    "./clock": {
+      "import": "./dist/clock.js",
+      "require": "./dist/clock.js"
+    },
+    "./event-emitter": {
+      "import": "./dist/event-emitter.js",
+      "require": "./dist/event-emitter.js"
+    },
+    "./loop": {
+      "import": "./dist/loop.js",
+      "require": "./dist/loop.js"
+    },
+    "./match": {
+      "import": "./dist/match.js",
+      "require": "./dist/match.js"
+    },
+    "./math": {
+      "import": "./dist/math.js",
+      "require": "./dist/math.js"
+    },
+    "./sleep": {
+      "import": "./dist/sleep.js",
+      "require": "./dist/sleep.js"
+    },
+    "./statestack": {
+      "import": "./dist/statestack.js",
+      "require": "./dist/statestack.js"
+    },
+    "./status": {
+      "import": "./dist/status.js",
+      "require": "./dist/status.js"
+    },
+    "./stream": {
+      "import": "./dist/stream.js",
+      "require": "./dist/stream.js"
+    },
+    "./text": {
+      "import": "./dist/text.js",
+      "require": "./dist/text.js"
+    }
   }
 }
