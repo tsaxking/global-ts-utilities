@@ -2,7 +2,7 @@
   "name": "ts-utils",
   "version": "1.0.0",
   "description": "A utility library",
-  "main": "lib/index.js",
+  "main": "lib/cjs/index.js",
   "module": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
