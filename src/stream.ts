@@ -32,23 +32,38 @@ export class Stream<T = unknown> {
 
     private index = 0;
 
-    public pipe(stream: Stream<T> | ((data: T, index: number) => void)) {
-        this.on('data', (data) => {
-            if (stream instanceof Stream) {
-                stream.add(data);
-            } else {
-                stream(data, this.index);
+    public pipe(stream: Stream<T> | ((data: T, index: number) => void), timeout?: number) {
+        return new Promise<void>((res, rej) => {
+            if (timeout) {
+                setTimeout(() => {
+                    if (stream instanceof Stream) {
+                        stream.error(new Error('Stream Timeout'));
+                    }
+                    rej(new Error('Stream Timeout'));
+                }, timeout);
             }
-        });
-        this.on('end', () => {
-            if (stream instanceof Stream) {
-                stream.end();
-            }
-        });
-        this.on('error', (error) => {
-            if (stream instanceof Stream) {
-                stream.error(error);
-            }
+            
+            this.on('data', (data) => {
+                if (stream instanceof Stream) {
+                    stream.add(data);
+                } else {
+                    stream(data, this.index);
+                }
+            });
+            this.on('end', () => {
+                if (stream instanceof Stream) {
+                    stream.end();
+                }
+
+                res();
+            });
+            this.on('error', (error) => {
+                if (stream instanceof Stream) {
+                    stream.error(error);
+                }
+
+                rej(error);
+            });
         });
     }
 
