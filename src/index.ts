@@ -9,3 +9,4 @@ export * from './statestack';
 export * from './status';
 export * from './stream';
 export * from './text';
+export * from './map';
