@@ -392,3 +392,73 @@ export type ReturnType<T> = T extends 'string'
                   : T extends A
                     ? ReturnType<T[0]>[]
                     : never;
+
+class AsyncResult<T, E> extends Promise<T> {
+    private _value: T | null = null;
+
+    constructor(
+        private readonly promise: Promise<T>,
+    ) {
+        super((res, rej) => {
+            promise.then(v => {
+                this._value = v;
+                res(v);
+            }).catch(e => rej(e));
+        });
+    }
+
+    async unwrap(): Promise<T> {
+        if (this._value) return this._value;
+        else return this.promise;
+    }
+
+    async expect(message: string): Promise<T> {
+        try {
+            return await this.unwrap();
+        } catch (e) {
+            throw new Error(message);
+        }
+    }
+
+    async isOk(): Promise<boolean> {
+        try {
+            await this.unwrap();
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    async isErr(): Promise<boolean> {
+        return !(await this.isOk());
+    }
+}
+
+// const attemptPromise = <T, E>(
+//     fn: () => Promise<T>,
+//     parseError?: (error: Error) => E
+// ): PromiseResult<T, E> => {
+//     return new PromiseResult<T, E>(fn());
+// };
+
+
+// const res = attemptPromise(() => {
+//     return new Promise<'Hello'>((resolve, reject) => {
+//         setTimeout(() => {
+//             resolve('Hello');
+//         }, 1000);
+//     });
+// });
+
+// (async () => {
+
+//     if (await res.isOk()) {
+
+//     }
+
+//     if (await res.isErr()) {
+
+//     }
+
+//     await res.unwrap();
+// })();
