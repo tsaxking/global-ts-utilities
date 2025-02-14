@@ -13,10 +13,11 @@ export class SimpleEventEmitter<E extends string> extends EM {
         super();
     }
 
-    on(event: E, listener: (...data: unknown[]) => void): void {
+    on(event: E, listener: (...data: unknown[]) => void) {
         const listeners = this.events.get(event) || [];
         listeners.push(listener);
         this.events.set(event, listeners);
+        return () => this.off(event, listener);
     }
 
     off(event: E, listener?: (...data: unknown[]) => void): void {
@@ -31,17 +32,19 @@ export class SimpleEventEmitter<E extends string> extends EM {
         }
     }
 
-    emit(event: E, ...data: unknown[]): void {
+    emit(event: E, ...data: unknown[]) {
         const listeners = this.events.get(event) || [];
         listeners.forEach(listener => listener(data));
+        return listeners.length;
     }
 
-    once(event: E, listener: (...data: unknown[]) => void): void {
+    once(event: E, listener: (...data: unknown[]) => void) {
         const onceListener = (...data: unknown[]) => {
             listener(...data);
             this.off(event, onceListener);
         };
         this.on(event, onceListener);
+        return () => this.off(event, onceListener);
     }
 }
 
@@ -50,13 +53,15 @@ export class EventEmitter<E extends Record<string, unknown>> extends EM {
         super();
     }
 
-    on<K extends keyof E>(event: K, listener: Listener<E[K]>): void {
+    on<K extends keyof E>(event: K, listener: Listener<E[K]>) {
         const listeners = this.events.get(event as string) || [];
         listeners.push(listener as Listener<unknown>);
         this.events.set(event as string, listeners);
+
+        return () => this.off(event, listener);
     }
 
-    off<K extends keyof E>(event: K, listener?: Listener<E[K]>): void {
+    off<K extends keyof E>(event: K, listener?: Listener<E[K]>) {
         if (!listener) {
             this.events.delete(event as string);
             return;
@@ -68,16 +73,19 @@ export class EventEmitter<E extends Record<string, unknown>> extends EM {
         }
     }
 
-    emit<K extends keyof E>(event: K, data: E[K]): void {
+    emit<K extends keyof E>(event: K, data: E[K]) {
         const listeners = this.events.get(event as string) || [];
         listeners.forEach(listener => listener(data));
+        return listeners.length;
     }
 
-    once<K extends keyof E>(event: K, listener: (data: E[K]) => void): void {
+    once<K extends keyof E>(event: K, listener: (data: E[K]) => void) {
         const onceListener = (data: E[K]) => {
             listener(data);
             this.off(event, onceListener);
         };
         this.on(event, onceListener);
+
+        return () => this.off(event, onceListener);
     }
 }
