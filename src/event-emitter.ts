@@ -20,7 +20,7 @@ export class SimpleEventEmitter<E extends string> extends EM {
         return () => this.off(event, listener);
     }
 
-    off(event: E, listener?: (...data: unknown[]) => void): void {
+    off(event: E, listener?: (...data: unknown[]) => void) {
         if (!listener) {
             this.events.delete(event);
             return;
@@ -29,7 +29,9 @@ export class SimpleEventEmitter<E extends string> extends EM {
         const index = listeners.indexOf(listener);
         if (index !== -1) {
             listeners.splice(index, 1);
+            return true;
         }
+        return false;
     }
 
     emit(event: E, ...data: unknown[]) {
@@ -70,7 +72,9 @@ export class EventEmitter<E extends Record<string, unknown>> extends EM {
         const index = listeners.indexOf(listener as Listener<unknown>);
         if (index !== -1) {
             listeners.splice(index, 1);
+            return true;
         }
+        return false;
     }
 
     emit<K extends keyof E>(event: K, data: E[K]) {
