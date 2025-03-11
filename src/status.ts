@@ -140,3 +140,134 @@ export enum ServerCode {
     notExtended = 510,
     networkAuthenticationRequired = 511
 }
+
+export const getMessage = (code: ServerCode) => {
+    switch (code) {
+        case ServerCode.continue:
+            return 'Continue';
+        case ServerCode.switchingProtocols:
+            return 'Switching Protocols';
+        case ServerCode.processing:
+            return 'Processing';
+        case ServerCode.earlyHints:
+            return 'Early Hints';
+        case ServerCode.ok:
+            return 'OK';
+        case ServerCode.created:
+            return 'Created';
+        case ServerCode.accepted:
+            return 'Accepted';
+        case ServerCode.nonAuthoritativeInformation:
+            return 'Non-Authoritative Information';
+        case ServerCode.noContent:
+            return 'No Content';
+        case ServerCode.resetContent:
+            return 'Reset Content';
+        case ServerCode.partialContent:
+            return 'Partial Content';
+        case ServerCode.multiStatus:
+            return 'Multi-Status';
+        case ServerCode.alreadyReported:
+            return 'Already Reported';
+        case ServerCode.imUsed:
+            return 'IM Used';
+        case ServerCode.multipleChoices:
+            return 'Multiple Choices';
+        case ServerCode.movedPermanently:
+            return 'Moved Permanently';
+        case ServerCode.found:
+            return 'Found';
+        case ServerCode.seeOther:
+            return 'See Other';
+        case ServerCode.notModified:
+            return 'Not Modified';
+        case ServerCode.useProxy:
+            return 'Use Proxy';
+        case ServerCode.unused:
+            return 'Unused';
+        case ServerCode.temporaryRedirect:
+            return 'Temporary Redirect';
+        case ServerCode.permanentRedirect:
+            return 'Permanent Redirect';
+        case ServerCode.badRequest:
+            return 'Bad Request';
+        case ServerCode.unauthorized:
+            return 'Unauthorized';
+        case ServerCode.paymentRequired:
+            return 'Payment Required';
+        case ServerCode.forbidden:
+            return 'Forbidden';
+        case ServerCode.notFound:
+            return 'Not Found';
+        case ServerCode.methodNotAllowed:
+            return 'Method Not Allowed';
+        case ServerCode.notAcceptable:
+            return 'Not Acceptable';
+        case ServerCode.proxyAuthenticationRequired:
+            return 'Proxy Authentication Required';
+        case ServerCode.requestTimeout:
+            return 'Request Timeout';
+        case ServerCode.conflict:
+            return 'Conflict';
+        case ServerCode.gone:
+            return 'Gone';
+        case ServerCode.lengthRequired:
+            return 'Length Required';
+        case ServerCode.preconditionFailed:
+            return 'Precondition Failed';
+        case ServerCode.payloadTooLarge:
+            return 'Payload Too Large';
+        case ServerCode.uriTooLong:
+            return 'URI Too Long';
+        case ServerCode.unsupportedMediaType:
+            return 'Unsupported Media Type';
+        case ServerCode.rangeNotSatisfiable:
+            return 'Range Not Satisfiable';
+        case ServerCode.expectationFailed:
+            return 'Expectation Failed';
+        case ServerCode.imATeapot:
+            return "I'm a teapot";
+        case ServerCode.misdirectedRequest:
+            return 'Misdirected Request';
+        case ServerCode.unprocessableEntity:
+            return 'Unprocessable Entity';
+        case ServerCode.locked:
+            return 'Locked';
+        case ServerCode.failedDependency:
+            return 'Failed Dependency';
+        case ServerCode.tooEarly:
+            return 'Too Early';
+        case ServerCode.upgradeRequired:
+            return 'Upgrade Required';
+        case ServerCode.preconditionRequired:
+            return 'Precondition Required';
+        case ServerCode.tooManyRequests:
+            return 'Too Many Requests';
+        case ServerCode.requestHeaderFieldsTooLarge:
+            return 'Request Header Fields Too Large';
+        case ServerCode.unavailableForLegalReasons:
+            return 'Unavailable For Legal Reasons';
+        case ServerCode.internalServerError:
+            return 'Internal Server Error';
+        case ServerCode.notImplemented:
+            return 'Not Implemented';
+        case ServerCode.badGateway:
+            return 'Bad Gateway';
+        case ServerCode.serviceUnavailable:
+            return 'Service Unavailable';
+        case ServerCode.gatewayTimeout:
+            return 'Gateway Timeout';
+        case ServerCode.httpVersionNotSupported:
+            return 'HTTP Version Not Supported';
+        case ServerCode.variantAlsoNegotiates:
+            return 'Variant Also Negotiates';
+        case ServerCode.insufficientStorage:
+            return 'Insufficient Storage';
+        case ServerCode.loopDetected:
+            return 'Loop Detected';
+        case ServerCode.notExtended:
+            return 'Not Extended';
+        case ServerCode.networkAuthenticationRequired:
+            return 'Network Authentication Required';
+    }
+};
