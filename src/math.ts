@@ -129,6 +129,7 @@ export class $Math {
      * @returns {number}
      */
     static average(array: number[]): number {
-        return array.reduce((a, b) => a + b, array[0] || 0) / array.length;
+        if (array.length === 0) return 0;
+        return array.reduce((a, b) => a + b, 0) / array.length;
     }
 }
