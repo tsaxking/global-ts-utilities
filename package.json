@@ -2,9 +2,6 @@
   "name": "ts-utils",
   "version": "1.0.0",
   "description": "A utility library",
-  "main": "lib/cjs/index.js",
-  "module": "lib/esm/index.js",
-  "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc && tsc -p tsconfig.commonjs.json && node ./scripts/post-build.js",
     "install": "pnpm build"
@@ -19,10 +16,6 @@
     "@types/node": "^20.0.0"
   },
   "exports": {
-    ".": {
-      "import": "./lib/esm/index.js",
-      "require": "./lib/cjs/index.js"
-    },
     "./check": {
       "import": "./lib/esm/check.js",
       "require": "./lib/cjs/check.js"

@@ -155,6 +155,24 @@ export class Err<E = Error, T = unknown> {
  */
 export type Result<T, E = Error> = Ok<T> | Err<E, T>;
 
+export class ResultPromise<T, E = Error> extends Promise<Result<T, E>> {
+    constructor(
+        executor: (
+            resolve: (value: Result<T, E>) => void,
+        ) => void
+    ) {
+        super(executor);
+    }
+
+    unwrap(): Promise<T> {
+        return this.then(result => result.unwrap());
+    }
+
+    expect(message: string): Promise<T> {
+        return this.then(result => result.expect(message));
+    }
+}
+
 /**
  * Attempts to run a function, returning a Result
  * @date 1/22/2024 - 2:56:57 AM
@@ -189,28 +207,40 @@ export const attempt = <T = unknown, E = Error>(
  *
  * @async
  */
-export const attemptAsync = async <T = unknown, E = Error>(
+export const attemptAsync = <T = unknown, E = Error>(
     fn: () => Promise<T>,
-    parseError?: (error: Error) => E
-): Promise<Result<T, E>> => {
-    try {
-        return new Ok(await fn());
-    } catch (e) {
-        if (parseError) {
-            const err = attempt(
-                () => parseError(e as Error),
-                e => 'Error parsing error: ' + e
-            );
-            if (err.isOk()) {
-                // console.warn(err.value);
-                return new Err(err.value);
+)=> {
+    return new ResultPromise<T, E>(async (res) => {
+        try {
+            const result = await fn();
+            res(new Ok(result));
+        } catch (e) {
+            // console.error('[check.ts]', e);
+            if (e instanceof Error) {
+                res(new Err(e as E));
+            } else {
+                res(new Err(new Error(String(e)) as E));
             }
-            // console.warn(err.error, e);
-            return new Err(e) as Result<T, E>;
         }
-        // console.warn(e);
-        return new Err(e) as Result<T, E>;
-    }
+    });
+    // try {
+    //     return new Ok(await fn());
+    // } catch (e) {
+    //     if (parseError) {
+    //         const err = attempt(
+    //             () => parseError(e as Error),
+    //             e => 'Error parsing error: ' + e
+    //         );
+    //         if (err.isOk()) {
+    //             // console.warn(err.value);
+    //             return new Err(err.value);
+    //         }
+    //         // console.warn(err.error, e);
+    //         return new Err(e) as Result<T, E>;
+    //     }
+    //     // console.warn(e);
+    //     return new Err(e) as Result<T, E>;
+    // }
 };
 
 /**
@@ -392,3 +422,5 @@ export type ReturnType<T> = T extends 'string'
                   : T extends A
                     ? ReturnType<T[0]>[]
                     : never;
+
+
