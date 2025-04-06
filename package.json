@@ -16,6 +16,10 @@
     "@types/node": "^20.0.0"
   },
   "exports": {
+    ".": {
+      "import": "./lib/esm/index.js",
+      "require": "./lib/cjs/index.js"
+    },
     "./check": {
       "import": "./lib/esm/check.js",
       "require": "./lib/cjs/check.js"
