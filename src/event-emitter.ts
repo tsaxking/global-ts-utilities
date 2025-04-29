@@ -36,7 +36,13 @@ export class SimpleEventEmitter<E extends string> extends EM {
 
     emit(event: E, ...data: unknown[]) {
         const listeners = this.events.get(event) || [];
-        listeners.forEach(listener => listener(data));
+        listeners.forEach(listener => {
+            try {
+                listener(data);
+            } catch (error) {
+                console.error(error);
+            }
+        });
         return listeners.length;
     }
 
@@ -79,7 +85,13 @@ export class EventEmitter<E extends Record<string, unknown>> extends EM {
 
     emit<K extends keyof E>(event: K, data: E[K]) {
         const listeners = this.events.get(event as string) || [];
-        listeners.forEach(listener => listener(data));
+        listeners.forEach(listener => {
+            try {
+                listener(data);
+            } catch (error) {
+                console.error(error);
+            }
+        });
         return listeners.length;
     }
 
