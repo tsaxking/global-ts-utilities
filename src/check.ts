@@ -52,6 +52,10 @@ export class Ok<T = unknown> {
         return this.value;
     }
 
+    unwrapOr(value: T): T {
+        return this.value;
+    }
+
     /**
      * If the result is an error, throw an error with the message
      * ONLY USE FOR TESTING OR WITHIN OTHER ATTEMPTS
@@ -129,6 +133,10 @@ export class Err<E = Error, T = unknown> {
         throw this.error;
     }
 
+    unwrapOr(value: T): T {
+        return value;
+    }
+
     /**
      * If the result is an error, throw an error with the message
      * ONLY USE FOR TESTING OR WITHIN OTHER ATTEMPTS
@@ -166,6 +174,15 @@ export class ResultPromise<T, E = Error> extends Promise<Result<T, E>> {
 
     unwrap(): Promise<T> {
         return this.then(result => result.unwrap());
+    }
+
+    unwrapOr(value: T): Promise<T> {
+        return this.then(result => {
+            if (result.isOk()) {
+                return result.unwrap();
+            }
+            return value;
+        });
     }
 
     expect(message: string): Promise<T> {

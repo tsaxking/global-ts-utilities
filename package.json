@@ -4,13 +4,15 @@
   "description": "A utility library",
   "scripts": {
     "build": "tsc && tsc -p tsconfig.commonjs.json && node ./scripts/post-build.js",
-    "install": "pnpm build"
+    "install": "pnpm build",
+    "test": "vitest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.2"
   },
   "devDependencies": {
     "@types/node": "^20.0.0"
