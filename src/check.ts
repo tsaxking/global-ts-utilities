@@ -201,6 +201,7 @@ export const attempt = <T = unknown, E = Error>(
     try {
         return new Ok(fn());
     } catch (e) {
+        if (e instanceof Error) emitError(e);
         // console.error('[check.ts]', e);
         if (parseError) {
             const err = attempt(
@@ -232,6 +233,7 @@ export const attemptAsync = <T = unknown, E = Error>(
             const result = await fn();
             res(new Ok(result));
         } catch (e) {
+            if (e instanceof Error) emitError(e);
             // console.error('[check.ts]', e);
             if (e instanceof Error) {
                 res(new Err(e as E));
@@ -441,3 +443,31 @@ export type ReturnType<T> = T extends 'string'
                     : never;
 
 
+const errorListeners = new Set<(error: Error) => void>();
+let logErrors = false;
+export const setLogErrors = (value: boolean): void => {
+    logErrors = value;
+};
+
+export const onError = (listener: (error: Error) => void): void => {
+    errorListeners.add(listener);
+};
+
+export const offError = (listener: (error: Error) => void): void => {
+    errorListeners.delete(listener);
+};
+
+export const onceError = (listener: (error: Error) => void): void => {
+    const wrappedListener = (error: Error) => {
+        listener(error);
+        offError(wrappedListener);
+    };
+    onError(wrappedListener);
+}
+
+const emitError = (error: Error): void => {
+    errorListeners.forEach(listener => listener(error));
+    if (logErrors) {
+        console.error('[ts-utils/check] Error:', error);
+    }
+};
