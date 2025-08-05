@@ -14,7 +14,7 @@ export class Loop<
     public readonly on = this.em.on.bind(this.em);
     public readonly once = this.em.once.bind(this.em);
     public readonly off = this.em.off.bind(this.em);
-    private readonly emit = this.em.emit.bind(this.em);
+    public readonly emit = this.em.emit.bind(this.em);
 
     private _running = false;
 
