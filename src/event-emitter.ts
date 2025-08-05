@@ -48,7 +48,7 @@ class EM<Events extends string> {
  * Simple event emitter with string events and unknown data payload.
  */
 export class SimpleEventEmitter<E extends string> extends EM<E> {
-  public readonly events = new Map<string, Listener<unknown>[]>();
+  public readonly events = new Map<string, Listener<void>[]>();
 
   /**
    * Clears all events and onceListen hooks.
@@ -65,7 +65,7 @@ export class SimpleEventEmitter<E extends string> extends EM<E> {
    * @param listener - Callback receiving the event data
    * @returns Function to unregister the listener
    */
-  on(event: E, listener: (data: unknown) => void) {
+  on(event: E, listener: () => void) {
     const listeners = this.events.get(event) || [];
     const isFirstListener = listeners.length === 0;
 
@@ -85,7 +85,7 @@ export class SimpleEventEmitter<E extends string> extends EM<E> {
    * @param listener - Specific listener to remove (optional)
    * @returns True if a listener was removed, false otherwise
    */
-  off(event: E, listener?: (data: unknown) => void) {
+  off(event: E, listener?: () => void) {
     if (!listener) {
       this.events.delete(event);
       return;
@@ -105,11 +105,11 @@ export class SimpleEventEmitter<E extends string> extends EM<E> {
    * @param data - Event data
    * @returns Number of listeners invoked
    */
-  emit(event: E, data: unknown) {
+  emit(event: E) {
     const listeners = this.events.get(event) || [];
     for (const listener of listeners) {
       try {
-        listener(data);
+        listener();
       } catch (error) {
         console.error(error);
       }
@@ -123,9 +123,9 @@ export class SimpleEventEmitter<E extends string> extends EM<E> {
    * @param listener - Callback receiving the event data
    * @returns Function to unregister the once listener
    */
-  once(event: E, listener: (data: unknown) => void) {
-    const onceListener = (data: unknown) => {
-      listener(data);
+  once(event: E, listener: () => void) {
+    const onceListener = () => {
+      listener();
       this.off(event, onceListener);
     };
     this.on(event, onceListener);
