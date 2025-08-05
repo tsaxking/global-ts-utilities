@@ -2,50 +2,56 @@ import { EventEmitter } from './event-emitter';
 import { sleep } from './sleep';
 
 type LoopEvents = {
-    stop: void;
-    start: void;
+    stop: undefined;
+    start: undefined;
 };
 
 export class Loop<
     Events extends Record<string, unknown> = Record<string, unknown>
-> extends EventEmitter<LoopEvents & Omit<Events, 'stop' | 'start'>> {
+> {
+    private readonly em = new EventEmitter<LoopEvents & Omit<Events, 'stop' | 'start'>>();
+
+    public readonly on = this.em.on.bind(this.em);
+    public readonly once = this.em.once.bind(this.em);
+    public readonly off = this.em.off.bind(this.em);
+    private readonly emit = this.em.emit.bind(this.em);
+
     private _running = false;
-    public stop = () => {
+
+    public async stop() {
+        if (!this._running) return;
         this._running = false;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         this.emit('stop', undefined as any);
-    };
+        await sleep(0); // Ensures the loop exits cleanly before restarting
+    }
 
     get active() {
         return this._running;
     }
 
     constructor(
-        public readonly fn: (tick: number) => void,
+        public readonly fn: (tick: number) => void | Promise<void>,
         public interval: number
     ) {
-        super();
     }
 
-    public start() {
-        if (this._running) return this.stop;
+    public async start() {
+        if (this._running) {
+            await this.stop();
+        }
+
         this._running = true;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         this.emit('start', undefined as any);
 
         const globalStart = Date.now();
         let i = 0;
 
-        const loop = async () => {
-            if (!this._running) return;
-            this.fn(i);
+        while (this._running) {
+            await this.fn(i);
             i++;
             await sleep(
                 this.interval - ((Date.now() - globalStart) % this.interval)
             );
-            loop();
-        };
-
-        loop();
+        }
     }
 }
