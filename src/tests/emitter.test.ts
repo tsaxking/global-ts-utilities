@@ -89,7 +89,7 @@ describe('SimpleEventEmitter (string keys)', () => {
   it('calls on() and emit()', () => {
     const spy = vi.fn();
     emitter.on('log', spy);
-    emitter.emit('log', undefined);
+    emitter.emit('log');
     expect(spy).toHaveBeenCalledOnce();
     // expect(spy).toHaveBeenCalledWith();
   });
@@ -97,8 +97,8 @@ describe('SimpleEventEmitter (string keys)', () => {
   it('calls once() only once', () => {
     const spy = vi.fn();
     emitter.once('start', spy);
-    emitter.emit('start', undefined);
-    emitter.emit('start', undefined);
+    emitter.emit('start');
+    emitter.emit('start');
     expect(spy).toHaveBeenCalledOnce();
     // expect(spy).toHaveBeenCalledWith();
   });
@@ -107,7 +107,7 @@ describe('SimpleEventEmitter (string keys)', () => {
     const spy = vi.fn();
     emitter.on('stop', spy);
     emitter.off('stop', spy);
-    emitter.emit('stop', 'should not fire');
+    emitter.emit('stop');
     expect(spy).not.toHaveBeenCalled();
   });
 
@@ -117,7 +117,7 @@ describe('SimpleEventEmitter (string keys)', () => {
     emitter.on('log', spy1);
     emitter.on('log', spy2);
     emitter.off('log');
-    emitter.emit('log', 'gone');
+    emitter.emit('log');
     expect(spy1).not.toHaveBeenCalled();
     expect(spy2).not.toHaveBeenCalled();
   });
