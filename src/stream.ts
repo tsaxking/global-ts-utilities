@@ -16,7 +16,7 @@ export class Stream<T = unknown> {
     private emit = this.emitter.emit.bind(this.emitter);
 
     public add(data: T) {
-        this.index ++;
+        this.index++;
         this.emit('data', data);
     }
 
@@ -32,38 +32,69 @@ export class Stream<T = unknown> {
 
     private index = 0;
 
-    public pipe(stream: Stream<T> | ((data: T, index: number) => void), timeout?: number) {
+    public pipe(stream: Stream<T> | ((data: T, index: number) => unknown), timeout?: number) {
         return new Promise<void>((res, rej) => {
-            if (timeout) {
-                setTimeout(() => {
+            let ended = false;
+            let errored = false;
+            const handlerPromises: Promise<unknown>[] = [];
+            let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+            const cleanup = () => {
+                this.off('data', onData);
+                this.off('end', onEnd);
+                this.off('error', onError);
+                if (timeoutId) clearTimeout(timeoutId);
+            };
+
+            const onEnd = () => {
+                ended = true;
+                cleanup();
+                Promise.allSettled(handlerPromises).then(() => {
                     if (stream instanceof Stream) {
-                        stream.error(new Error('Stream Timeout'));
+                        stream.end();
                     }
-                    rej(new Error('Stream Timeout'));
-                }, timeout);
-            }
-            
-            this.on('data', (data) => {
+                    res();
+                });
+            };
+
+            const onError = (e: Error) => {
+                errored = true;
+                cleanup();
+                Promise.allSettled(handlerPromises).then(() => {
+                    if (stream instanceof Stream) {
+                        stream.error(e);
+                    }
+                    rej(e);
+                });
+            };
+
+            const onData = (data: T) => {
                 if (stream instanceof Stream) {
                     stream.add(data);
                 } else {
-                    stream(data, this.index);
+                    try {
+                        const result = stream(data, this.index);
+                        if (result instanceof Promise) {
+                            handlerPromises.push(result.catch(() => {}));
+                        }
+                    } catch (err) {
+                        onError(err instanceof Error ? err : new Error(String(err)));
+                    }
                 }
-            });
-            this.on('end', () => {
-                if (stream instanceof Stream) {
-                    stream.end();
-                }
+            };
 
-                res();
-            });
-            this.on('error', (error) => {
-                if (stream instanceof Stream) {
-                    stream.error(error);
-                }
+            this.on('data', onData);
+            this.once('end', onEnd);
+            this.once('error', onError);
 
-                rej(error);
-            });
+            if (timeout) {
+                timeoutId = setTimeout(() => {
+                    if (!ended && !errored) {
+                        const err = new Error('Stream Timeout');
+                        onError(err);
+                    }
+                }, timeout);
+            }
         });
     }
 
