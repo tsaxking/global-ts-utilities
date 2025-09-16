@@ -32,7 +32,10 @@ export class Stream<T = unknown> {
 
     private index = 0;
 
-    public pipe(stream: Stream<T> | ((data: T, index: number) => unknown), timeout?: number) {
+    public pipe(
+        stream: Stream<T> | ((data: T, index: number) => unknown),
+        timeoutMs?: number
+    ) {
         return new Promise<void>((res, rej) => {
             let ended = false;
             let errored = false;
@@ -46,26 +49,32 @@ export class Stream<T = unknown> {
                 if (timeoutId) clearTimeout(timeoutId);
             };
 
-            const onEnd = () => {
-                ended = true;
-                cleanup();
-                Promise.allSettled(handlerPromises).then(() => {
-                    if (stream instanceof Stream) {
-                        stream.end();
-                    }
-                    res();
-                });
+            const waitForHandlers = async () => {
+                try {
+                    await Promise.allSettled(handlerPromises);
+                } catch {
+                    // shouldn't throw, since allSettled always resolves
+                }
             };
 
-            const onError = (e: Error) => {
+            const onEnd = async () => {
+                ended = true;
+                cleanup();
+                await waitForHandlers();
+                if (stream instanceof Stream) {
+                    stream.end();
+                }
+                res();
+            };
+
+            const onError = async (e: Error) => {
                 errored = true;
                 cleanup();
-                Promise.allSettled(handlerPromises).then(() => {
-                    if (stream instanceof Stream) {
-                        stream.error(e);
-                    }
-                    rej(e);
-                });
+                await waitForHandlers();
+                if (stream instanceof Stream) {
+                    stream.error(e);
+                }
+                rej(e);
             };
 
             const onData = (data: T) => {
@@ -75,7 +84,9 @@ export class Stream<T = unknown> {
                     try {
                         const result = stream(data, this.index);
                         if (result instanceof Promise) {
-                            handlerPromises.push(result.catch(() => {}));
+                            handlerPromises.push(
+                                result.catch(() => {}) // prevent rejection leaks
+                            );
                         }
                     } catch (err) {
                         onError(err instanceof Error ? err : new Error(String(err)));
@@ -87,16 +98,16 @@ export class Stream<T = unknown> {
             this.once('end', onEnd);
             this.once('error', onError);
 
-            if (timeout) {
+            if (timeoutMs) {
                 timeoutId = setTimeout(() => {
                     if (!ended && !errored) {
-                        const err = new Error('Stream Timeout');
-                        onError(err);
+                        onError(new Error('Stream Timeout'));
                     }
-                }, timeout);
+                }, timeoutMs);
             }
         });
     }
+
 
     public await(timeout = 0) {
         return attemptAsync(async () => new Promise<T[]>((res, rej) => {
