@@ -69,6 +69,10 @@
     "./map": {
       "import": "./lib/esm/map.js",
       "require": "./lib/cjs/map.js"
+    },
+    "./batch": {
+      "import": "./lib/esm/batch.js",
+      "require": "./lib/cjs/batch.js"
     }
   }
 }
