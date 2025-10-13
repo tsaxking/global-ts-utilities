@@ -423,6 +423,7 @@ export class Batch<T, R> {
      * Adds an item to the batch queue for processing.
      * 
      * @param item - The item to be added to the batch
+     * @param doRun - Whether to trigger processing immediately if conditions are met (default: true)
      * @returns Promise that resolves with the processing result for this specific item
      * 
      * @throws {BatchError} When the queue limit is exceeded (backpressure protection)
@@ -442,7 +443,7 @@ export class Batch<T, R> {
      * }
      * ```
      */
-    add(item: T) {
+    add(item: T, doRun = true) {
         return attemptAsync(async () => {
             if (this._items.length >= this.config.limit) {
                 throw new BatchError(`Batch limit of ${this.config.limit} exceeded.`);
@@ -454,10 +455,12 @@ export class Batch<T, R> {
                     rej
                 });
             });
-            if (this._items.length >= this.config.batchSize) {
-                this.run();
-            } else if (!this.timer) {
-                this.start();
+            if (doRun) {
+                if (this._items.length >= this.config.batchSize) {
+                    this.run();
+                } else if (!this.timer) {
+                    this.start();
+                }
             }
             return p;
         });
