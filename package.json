@@ -73,6 +73,10 @@
     "./batch": {
       "import": "./lib/esm/batch.js",
       "require": "./lib/cjs/batch.js"
+    },
+    "./queue": {
+      "import": "./lib/esm/queue.js",
+      "require": "./lib/cjs/queue.js"
     }
   }
 }

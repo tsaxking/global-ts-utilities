@@ -248,7 +248,11 @@ export class Batch<T, R> {
         interval: number;
         limit: number;
         timeout: number;
-    }) {}
+    }) {
+        if (config.batchSize <= 0) {
+            throw new BatchError("batchSize must be greater than 0.");
+        }
+    }
 
     /** 
      * Whether a batch is currently being processed.
