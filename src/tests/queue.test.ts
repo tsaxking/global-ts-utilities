@@ -12,9 +12,10 @@ import { sleep } from '../sleep';
 describe('Queue', () => {
     let queue: Queue<string, string>;
     
+    const process = vi.fn(async (item: string) => `processed-${item}`);
+
     const defaultConfig = {
-        process: vi.fn(async (item: string) => `processed-${item}`),
-        maxSize: 10,
+        limit: 10,
         concurrency: 2,
         interval: 50,
         timeout: 1000,
@@ -23,7 +24,7 @@ describe('Queue', () => {
 
     beforeEach(() => {
         vi.clearAllMocks();
-        queue = new Queue(defaultConfig);
+        queue = new Queue(process, defaultConfig);
     });
 
     afterEach(() => {
@@ -40,11 +41,11 @@ describe('Queue', () => {
         });
 
         it('should validate configuration parameters', () => {
-            expect(() => new Queue({ ...defaultConfig, maxSize: 0 }))
+            expect(() => new Queue(process, { ...defaultConfig, limit: 1 }))
                 .toThrow(QueueError);
-            expect(() => new Queue({ ...defaultConfig, concurrency: -1 }))
+            expect(() =>new Queue(process, { ...defaultConfig, concurrency: 1 }))
                 .toThrow(QueueError);
-            expect(() => new Queue({ ...defaultConfig, timeout: 0 }))
+            expect(() => new Queue(process, { ...defaultConfig, timeout: 0 }))
                 .toThrow(QueueError);
         });
 
@@ -71,7 +72,7 @@ describe('Queue', () => {
             
             const result = await promise.unwrap();
             expect(result).toBe('processed-test-item');
-            expect(defaultConfig.process).toHaveBeenCalledWith('test-item');
+            expect(process).toHaveBeenCalledWith('test-item');
         });
 
         it('should handle FIFO ordering', async () => {
@@ -88,7 +89,7 @@ describe('Queue', () => {
         });
 
         it('should handle LIFO ordering', async () => {
-            const lifoQueue = new Queue({ ...defaultConfig, type: 'lifo' });
+            const lifoQueue = new Queue(process, { ...defaultConfig, type: 'lifo' });
             lifoQueue.init();
             
             try {
@@ -102,7 +103,7 @@ describe('Queue', () => {
                 await Promise.all(promises.map(p => p.unwrap()));
                 
                 // The exact order depends on timing, but all should be processed
-                expect(defaultConfig.process).toHaveBeenCalledTimes(3);
+                expect(process).toHaveBeenCalledTimes(3);
             } finally {
                 lifoQueue.destroy();
             }
@@ -115,14 +116,13 @@ describe('Queue', () => {
         });
 
         it('should handle processing errors', async () => {
-            const errorQueue = new Queue({
-                ...defaultConfig,
-                process: vi.fn(async (item: string) => {
+            const errorQueue = new Queue(vi.fn(async (item: string) => {
                     if (item === 'fail') {
                         throw new Error('Processing failed');
                     }
                     return `processed-${item}`;
-                })
+                }), {
+                ...defaultConfig,
             });
             errorQueue.init();
 
@@ -157,12 +157,11 @@ describe('Queue', () => {
         });
 
         it('should handle timeouts', async () => {
-            const slowQueue = new Queue({
-                ...defaultConfig,
-                process: vi.fn(async () => {
+            const slowQueue = new Queue( vi.fn(async () => {
                     await sleep(2000); // Longer than timeout
                     return 'done';
-                }),
+                }),{
+                ...defaultConfig,
                 timeout: 100
             });
             slowQueue.init();
@@ -271,9 +270,8 @@ describe('Queue', () => {
         });
 
         it('should emit error events', async () => {
-            const errorQueue = new Queue({
+            const errorQueue = new Queue( vi.fn(async () => { throw new Error('Test error'); }), {
                 ...defaultConfig,
-                process: vi.fn(async () => { throw new Error('Test error'); })
             });
             errorQueue.init();
 
