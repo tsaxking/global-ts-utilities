@@ -209,26 +209,26 @@ export class Queue<T, R> {
     /**
      * Creates a new queue processor with the specified configuration
      * 
+     * @param process - Function that processes individual items
      * @param config - Configuration options for the queue processor
-     * @param config.process - Function that processes individual items
-     * @param config.maxSize - Maximum number of items allowed in the queue
+     * @param config.limit - Maximum number of items allowed in the queue
      * @param config.concurrency - Number of items to process simultaneously
      * @param config.interval - Time in milliseconds between processing cycles
      * @param config.timeout - Maximum time in milliseconds for an item to be processed
      * @param config.type - Queue ordering: 'fifo' (first-in-first-out) or 'lifo' (last-in-first-out)
      */
     constructor(
+        public readonly process: (item: T) => Promise<R> | R,
         public readonly config: {
-            process: (item: T) => Promise<R> | R;
-            maxSize: number;
+            limit: number;
             concurrency: number;
             interval: number;
             timeout: number;
             type: 'fifo' | 'lifo';
         }
     ) {
-        if (config.maxSize <= 0) {
-            throw new QueueError("maxSize must be greater than 0");
+        if (config.limit <= 0) {
+            throw new QueueError("limit must be greater than 0");
         }
         if (config.concurrency <= 0) {
             throw new QueueError("concurrency must be greater than 0");
@@ -306,9 +306,9 @@ export class Queue<T, R> {
             /** Current number of items in queue */
             queueSize: this._items.length,
             /** Maximum queue capacity */
-            maxSize: this.config.maxSize,
+            maxSize: this.config.limit,
             /** Queue utilization as percentage (0-100) */
-            utilization: Math.round((this._items.length / this.config.maxSize) * 100),
+            utilization: Math.round((this._items.length / this.config.limit) * 100),
             /** Number of successful operations */
             successCount: this._success,
             /** Number of failed operations */
@@ -368,7 +368,7 @@ export class Queue<T, R> {
                     const startTime = Date.now();
                     
                     try {
-                        const result = await this.config.process(queueItem.item);
+                        const result = await this.process(queueItem.item);
                         const processingTime = Date.now() - startTime;
                         
                         // Clear timeout since processing succeeded
@@ -440,7 +440,7 @@ export class Queue<T, R> {
      */
     enqueue(item: T) {
         return attemptAsync(async () => {
-            if (this._items.length >= this.config.maxSize) {
+            if (this._items.length >= this.config.limit) {
                 this.em.emit('full');
                 throw new QueueError("Queue is full");
             }
@@ -542,14 +542,13 @@ export class Queue<T, R> {
         return attemptAsync(async () => {
             // Allow any pending adds to complete
             await sleep(0);
+            this.stop();
             
             while (this._items.length > 0) {
                 await this.processItems();
                 // Small delay to prevent tight loop
                 await sleep(1);
             }
-            
-            this.stop();
             this.em.emit('drained');
         });
     }
@@ -562,6 +561,9 @@ export class Queue<T, R> {
             clearInterval(this.interval);
             this.interval = null;
         }
+
+        this._processing = false;
+        this._paused = false;
     }
 
     /**
