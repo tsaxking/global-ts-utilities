@@ -1,12 +1,5 @@
-/**
- * Random operations
- * @date 1/13/2024 - 11:32:15 PM
- *
- * @export
- * @class Random
- * @typedef {Random}
- */
-export class Random {
+
+export namespace Random {
     /**
      * Returns a random uuid string
      * @date 1/13/2024 - 11:32:15 PM
@@ -17,7 +10,7 @@ export class Random {
      *     }} [options]
      * @returns {string}
      */
-    static uuid(options?: { length?: number; charset?: string }) {
+    export function uuid(options?: { length?: number; charset?: string }) {
         const length = options?.length ?? 16;
         const charset =
             options?.charset ??
@@ -41,7 +34,7 @@ export class Random {
      * @param {T[]} array
      * @returns {T}
      */
-    static choose<T = never>(array: T[]): T {
+    export function choose<T = never>(array: T[]): T {
         return array[Math.floor(Math.random() * array.length)];
     }
 
@@ -53,7 +46,7 @@ export class Random {
      * @param {T[]} array
      * @returns {T[]}
      */
-    static shuffle<T = never>(array: T[]): T[] {
+    export function shuffle<T = never>(array: T[]): T[] {
         const result: T[] = [];
         for (let i = 0; i < array.length; i++) {
             const index = Math.floor(Math.random() * array.length);
@@ -71,7 +64,7 @@ export class Random {
      * @param {number} max
      * @returns {number}
      */
-    static between(min: number, max: number): number {
+    export function between(min: number, max: number): number {
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
 }
@@ -84,7 +77,7 @@ export class Random {
  * @class
  * @typedef {$Math}
  */
-export class $Math {
+export namespace $Math {
     /**
      * Returns a random number to the given number of significant figures
      * @date 1/13/2024 - 11:32:15 PM
@@ -93,7 +86,7 @@ export class $Math {
      * @param {number} num
      * @returns {number}
      */
-    static roundTo(sigFigs: number, num: number): number {
+    export function roundTo(sigFigs: number, num: number): number {
         const mult = Math.pow(10, sigFigs);
         return Math.round(num * mult) / mult;
     }
@@ -106,7 +99,7 @@ export class $Math {
      * @param {number} window
      * @returns {(value: number, index: number, array: {}) => number}
      */
-    static movingAverage(
+    export function movingAverage(
         window: number
     ): (value: number, index: number, array: number[]) => number {
         if (window < 1) throw new Error('Window must be greater than 0');
@@ -128,7 +121,13 @@ export class $Math {
      * @param {number[]} array
      * @returns {number}
      */
-    static average(array: number[]): number {
-        return array.reduce((a, b) => a + b, array[0] || 0) / array.length;
+    export function average(array: number[]): number {
+        return array.reduce((a, b) => a + b, 0) / array.length;
     }
+}
+
+export namespace M {
+    export const roundTo = $Math.roundTo;
+    export const movingAverage = $Math.movingAverage;
+    export const average = $Math.average;
 }
