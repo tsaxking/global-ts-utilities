@@ -77,6 +77,10 @@
     "./queue": {
       "import": "./lib/esm/queue.js",
       "require": "./lib/cjs/queue.js"
+    },
+    "./types": {
+      "import": "./lib/esm/types/index.js",
+      "require": "./lib/cjs/types/index.js"
     }
   }
 }
