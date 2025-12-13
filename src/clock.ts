@@ -229,3 +229,37 @@ export const segment = (dates: Date[], segments?: number): Date[] => {
             return segment(dates, 5); // 1 year segments
     }
 };
+
+export const after = (ms: number, startDate?: Date) => {
+    startDate = startDate || new Date();
+    return new Date(startDate.getTime() + ms);
+}
+
+export const tomorrow = () => after(1000 * 60 * 60 * 24);
+export const yesterday = () => after(-1000 * 60 * 60 * 24);
+export const nextWeek = () => after(1000 * 60 * 60 * 24 * 7);
+export const lastWeek = () => after(-1000 * 60 * 60 * 24 * 7);
+export const nextMonth = () => {
+    const date = new Date();
+    const month = date.getMonth();
+    date.setMonth(month + 1);
+    return date;
+}
+export const lastMonth = () => {
+    const date = new Date();
+    const month = date.getMonth();
+    date.setMonth(month - 1);
+    return date;
+};
+export const nextYear = () => {
+    const date = new Date();
+    const year = date.getFullYear();
+    date.setFullYear(year + 1);
+    return date;
+}
+export const lastYear = () => {
+    const date = new Date();
+    const year = date.getFullYear();
+    date.setFullYear(year - 1);
+    return date;
+}
